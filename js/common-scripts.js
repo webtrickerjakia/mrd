@@ -10,36 +10,25 @@
 
 
 
-
         $('.mega-menu').click(function () {
             $("body").toggleClass("btnShown");
         });
-
-        $(".sub_menu").parent("li").addClass("has-sub-nav");
-        $(".has-sub-nav").each(function () {
+    
+        // Iterate over each 'li' that contains a '.sub_menu'
+        $(".sub-nav").each(function () {
             var $$this = $(this);
-            
-            if ($(window).width() > 1024) {
-                $$this.find('> a').mouseenter(function () {
-                    $$this.find('.sub_menu').fadeIn();
-                })
-                $$this.mouseleave(function () {
-                    $('.sub_menu').fadeOut();
-                })
-            }
-            if ($(window).width() < 1025) {
-                $$this.find('> a').click(function (e) {
-                    e.preventDefault();
-                    $$this.find('.sub_menu').slideToggle();
-                })
-               
-            }
-            
-            
-        })
-
-
-
+    
+            // On click of the sub-nav link, toggle 'has-sub-nav' class and the sub menu
+            $$this.find('.menu-link').click(function (e) {
+                e.preventDefault();
+                
+                // Toggle 'has-sub-nav' class dynamically on each click
+                $$this.toggleClass('has-sub-nav');
+                
+                // Toggle visibility of the sub_menu with slide effect
+                $$this.find('.sub_menu').slideToggle();
+            });
+        });
 
 
 
@@ -47,22 +36,7 @@
 
 
         //FAQs Accordion Function
-        $(".accordion-item").each(function(){
-            var $this = $(this);
-            $this.find(" > h5").on("click touch", function(){
-                $(".accordion-item").removeClass("active")
-                $(".accordion-item .accordion-content").slideUp();
-                if($this.find(".accordion-content:visible").length){
-                    $(".accordion-item").removeClass("active")
-                    $(".accordion-item .accordion-content").slideUp();
-                }
-                else{
-                    $this.addClass("active")
-                    $(".accordion-item .accordion-content").slideUp();
-                    $this.find(" > .accordion-content").slideDown();
-                }
-            })
-        })
+    
         
 
         // Tab 
@@ -82,22 +56,7 @@
 
        
    
-              
-        if ($(window).width() < 767) {
-            $('.best-sellers-slider').slick({
-                arrows: false,
-                autoplay: true,
-                autoplaySpeed: 2000,
-                infinite: true,
-                navigation: false,
-                speed: 300,
-                dots: true,
-                arrows:false,
-                slidesToShow: 1,
-                slidesToScroll: 1
-            });
-        }
-        
+       
 
 
         if ($(window).width() < 767) {
@@ -118,28 +77,158 @@
 
 
         
-  
-        $('.cart-trigger').click(function (e) {
-            e.preventDefault()
-            $("body").toggleClass("cartShown");
-            $("html").toggleClass("scrollOff");
-
-            $('.cart-close').click(function () {
-                $("body").removeClass("cartShown");
-                $("html").removeClass("scrollOff");
-            });
-        });
-
-        $('.cart').click(function () {
-            $("body").removeClass("cartShown");
-            $("html").removeClass("scrollOff");
-        });
-        $('.cart-inner').click(function (e) {
-            e.stopPropagation();
+        $('.thumbnail:first').addClass('selected');
+    
+        // Change main image on click
+        $('.thumbnail').on('click', function(e) {
+            e.preventDefault(); // Prevent default action
+            
+            var clicked = $(this);
+            var newSelection = clicked.data('big'); // Get the new image path
+            var $img = $('<img>', { src: newSelection }); // Create a new image element
+            
+            // Change selected state
+            clicked.siblings().removeClass('selected');
+            clicked.addClass('selected');
+            
+            // Update the primary image
+            $('.primary').empty().append($img.hide().fadeIn('slow'));
         });
         
 
-  
+
+
+        if ($('#home-product-container').length) {
+            $('#home-product-container').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                mobileFirst: true,
+                dots: true,   
+                navigator:true,
+                responsive: [
+                    {
+                        breakpoint: 320,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                            autoplay: false,
+                            speed: 500,
+                            swipe: true,
+                            arrows: false,
+
+                        }
+                    },
+                    {
+                            breakpoint: 780,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1,
+                                autoplay: false,
+                                speed: 500,
+                                swipe: true,
+                                arrows: false,
+    
+                            }
+                    },
+                    {
+                            breakpoint: 991,
+                            settings: 'unslick'
+                    }
+                ]
+            })
+        
+            $(window).on('resize', function () {
+                $('#home-product-container').slick('resize');
+                });
+        }
+
+        if ($('.partner-items').length) {
+            $('.partner-items').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                mobileFirst: true,
+                dots: true, 
+                navigator:true,
+                responsive: [
+                    {
+                        breakpoint: 320,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                            autoplay: false,
+                            speed: 500,
+                            swipe: true,
+                            arrows: false,
+
+                        }
+                    },
+                    {
+                            breakpoint: 780,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1,
+                                autoplay: false,
+                                speed: 500,
+                                swipe: true,
+                                arrows: false,
+    
+                            }
+                    },
+                    {
+                            breakpoint: 991,
+                            settings: 'unslick'
+                    }
+                ]
+            })
+        
+            $(window).on('resize', function () {
+                $('.partner-items').slick('resize');
+                });
+        }
+
+
+
+
+        if ($('.history-slider').length) {
+            function initSlickSlider() {
+                if ($(window).width() > 1024) {  // Only initialize slider on screens wider than 1024px
+                    if (!$('.history-slider').hasClass('slick-initialized')) {  // Prevent multiple initializations
+                        $('.history-slider').slick({
+                            slidesToShow: 4,  // Show 3 slides
+                            slidesToScroll: 1,  // Scroll 1 slide at a time
+                            dots: false,  // Disable dots navigation
+                            arrows: true,  // Enable navigation arrows
+                            mobileFirst: true
+                        });
+                    }
+                } else {
+                    if ($('.history-slider').hasClass('slick-initialized')) {
+                        $('.history-slider').slick('unslick');  // Destroy the slider on screens smaller than 1024px
+                    }
+                }
+            }
+        
+            // Initialize slider on document ready
+            $(document).ready(function() {
+                initSlickSlider();
+            });
+        
+            // Reinitialize slider on window resize
+            $(window).on('resize', function () {
+                initSlickSlider();
+            });
+        }
+        
+
+        $('.sub-item > a').click(function(event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            $(this).next('.mega-menu').slideToggle(); // Toggle the mega menu
+        });
+
+
+
+
+
 
 
 
@@ -147,28 +236,8 @@
 
     
   
-      
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get video elements
-        var thumbnail = document.querySelector('.play-icn');
-        var video = document.querySelector('.video-player');
-    
-        // Hide video initially
-        video.style.display = 'none';
-    
-        // Add click event listener to thumbnail
-        thumbnail.addEventListener('click', function() {
-            // Toggle video display
-            if (video.style.display === 'none' || video.style.display === '') {
-                video.style.display = 'block';
-                // Play video
-                video.play();
-            } else {
-                // Pause video
-                video.pause();
-            }
-        });
-    });
+
+   
     
 
 	
